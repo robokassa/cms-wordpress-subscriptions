@@ -39,6 +39,7 @@ Robokassa – ведущий сервис по приёму платежей в 
 Почта: techsupport@robokassa.ru
 Телефон: 8 (800) 500-25-57
 https://www.robokassa.ru/ru/Support/SendMsg.aspx
+WooCommerce Subscriptions: https://woocommerce.com/products/woocommerce-subscriptions/
 
 Рекуррентные платежи подключаются Робокассой после согласования, просто напишите запрос через личный кабинет.
 ВНИМАНИЕ! Использование функционала переодических списаний возможно только при подключенной функции в личном кабинете Робокассы и с приобретенным плагином WooCommerce Subscriptions
