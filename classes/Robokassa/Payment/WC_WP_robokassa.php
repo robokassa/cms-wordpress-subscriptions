@@ -174,13 +174,12 @@ class WC_WP_robokassa extends \WC_Payment_Gateway {
             $data['IsTest'] = 1;
         }
 
-        $ret = file_get_contents('https://auth.robokassa.ru/Merchant/Recurring', false, stream_context_create([
-            'http' => [
-                'method'  => 'POST',
-                'header'  => 'Content-Type: application/x-www-form-urlencoded',
-                'content' => http_build_query($data),
-            ]
-        ]));
+
+        $ret = wp_remote_post('https://auth.robokassa.ru/Merchant/Recurring', array(
+            'header' => 'Content-Type: application/x-www-form-urlencoded',
+            'method' => 'POST',
+            'body' => http_build_query($data)
+        ));
     }
     /**
      * По идее - выполняем процесс оплаты и получаем результат
