@@ -8,7 +8,7 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Pragma: public');
 echo '<?xml version="1.0" encoding="utf-8"?>';
 ?>
-            <yml_catalog date="2021-04-12 13:21">
+            <yml_catalog date="2021-05-26 16:49">
           <shop>
             <name>draxon</name>
             <company>draxon</company>
@@ -31,7 +31,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
                         <name>Анимешка</name>
                         <description><![CDATA[Самая лучшая]]></description>
                         <url>http://wp.loc/product/%d0%b0%d0%bd%d0%b8%d0%bc%d0%b5%d1%88%d0%ba%d0%b0/</url>
-                        <price>5</price>
+                        <price>1</price>
                         <currencyId>RUB</currencyId>
                         <categoryId>0</categoryId><picture>http://wp.loc/wp-content/uploads/2021/02/4223-150x150.jpg</picture>
                       </offer>

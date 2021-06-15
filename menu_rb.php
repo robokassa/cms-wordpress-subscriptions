@@ -18,7 +18,7 @@
 
 
 <div class="menu_rb" align="center" style="margin-top: 50px;">
-    <h1>Настройки плагина Робокасса для WooCommerce</h1>
+    <h1>Настройки плагина Робокасса для WooCommerce Subscriptions</h1>
 
     <br>
 

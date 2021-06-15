@@ -1,12 +1,12 @@
 <?php
 
 /*
-  Plugin Name: Робокасса WooCommerce
+  Plugin Name: Robokassa Subscriptions
 
-  Description: Данный плагин добавляет на Ваш сайт метод оплаты Робокасса для WooCommerce
+  Description: Данный плагин добавляет на Ваш сайт метод оплаты Робокасса с поддержкой периодических платежей
   Plugin URI: /wp-admin/admin.php?page=main_settings_rb.php
   Author: Робокасса
-  Version: 1.3.12
+  Version: 1.0
 */
 
 use Robokassa\Payment\RoboDataBase;
@@ -64,8 +64,8 @@ function robokassa_chosen_payment_method(WC_Cart $cart)
     }
 }
 
-add_action('woocommerce_review_order_before_payment', 'refresh_payment_methods');
-function refresh_payment_methods()
+add_action('woocommerce_review_order_before_payment', 'robokassa_refresh_payment_methods');
+function robokassa_refresh_payment_methods()
 {
     // jQuery code
     ?>
@@ -281,7 +281,6 @@ function robokassa_payment_get_success_fail_url($name, $order_id)
  */
 function robokassa_payment_wp_robokassa_checkPayment()
 {
-    file_put_contents(__DIR__ . '/test.txt', print_r($_REQUEST, true));
     if (isset($_REQUEST['robokassa'])) {
 
         /** @var string $returner */
@@ -295,8 +294,8 @@ function robokassa_payment_wp_robokassa_checkPayment()
                     implode(
                         ':',
                         [
-                            $_REQUEST['OutSum'],
-                            $_REQUEST['InvId'],
+                            sanitize_file_name($_REQUEST['OutSum']),
+                            sanitize_file_name($_REQUEST['InvId']),
                             (
                             (get_option('robokassa_payment_test_onoff') == 'true')
                                 ? get_option('robokassa_payment_testshoppass2')
@@ -328,7 +327,7 @@ function robokassa_payment_wp_robokassa_checkPayment()
                     }
                 }
 
-                $returner = 'OK' . $_REQUEST['InvId'];
+                $returner = 'OK' . sanitize_file_name($_REQUEST['InvId']);
 
                 if (get_option('robokassa_payment_sms1_enabled') == 'on') {
 
@@ -345,7 +344,7 @@ function robokassa_payment_wp_robokassa_checkPayment()
                             $order->billing_phone,
                             get_option('robokassa_payment_sms1_text'),
                             (get_option('robokassa_payment_sms_translit') == 'on'),
-                            $_REQUEST['InvId'],
+                            sanitize_file_name($_REQUEST['InvId']),
                             1
                         ))->send();
                     } catch (Exception $e) {
@@ -362,22 +361,22 @@ function robokassa_payment_wp_robokassa_checkPayment()
         }
 
         if ($_REQUEST['robokassa'] == 'success') {
-            header('Location:' . robokassa_payment_get_success_fail_url(get_option('robokassa_payment_SuccessURL'), $_REQUEST['InvId']));
+            header('Location:' . robokassa_payment_get_success_fail_url(get_option('robokassa_payment_SuccessURL'), sanitize_file_name($_REQUEST['InvId'])));
             die;
         }
 
         if ($_REQUEST['robokassa'] == 'fail') {
-            header('Location:' . robokassa_payment_get_success_fail_url(get_option('robokassa_payment_FailURL'), $_REQUEST['InvId']));
+            header('Location:' . robokassa_payment_get_success_fail_url(get_option('robokassa_payment_FailURL'), sanitize_file_name($_REQUEST['InvId'])));
             die;
         }
 
-        echo $returner;
+        echo sanitize_file_name($returner);
         die;
     }
 }
 
 // Подготовка строки перед кодированием в base64
-function formatSignReplace($string)
+function robokassa_format_sign_replace($string)
 {
     return \strtr(
         $string,
@@ -389,7 +388,7 @@ function formatSignReplace($string)
 }
 
 // Подготовка строки после кодирования в base64
-function formatSignFinish($string)
+function robokassa_format_sign_finish($string)
 {
     return \preg_replace('/^(.*?)(=*)$/', '$1', $string);
 }
@@ -415,7 +414,7 @@ function robokassa_payment_getRobomarketHeaderHash($document, $secret)
 function robokassa_payment_robomarketRequest()
 {
     if (isset($_REQUEST['robomarket'])) {
-        $requestBody = file_get_contents('php://input');
+        $requestBody = wp_remote_get('php://input');
 
         $robomarketSecret = get_option('robokassa_payment_robomarket_secret');
         $headerRequest = robokassa_payment_getRobomarketHeaderHash($requestBody, $robomarketSecret);
@@ -670,7 +669,7 @@ function robokassa_payment_robomarketRequest()
 
         robokassa_payment_DEBUG('}');
 
-        echo $mainResponse;
+        echo sanitize_file_name($mainResponse);
 
         die();
     }
@@ -821,7 +820,6 @@ function robokassa_payment_createFormWC($order_id, $label, $commission = 0)
         $invDesc = "Заказ номер $order_id";
     }
 
-    $receiptForForm = (get_option('robokassa_payment_type_commission') == 'false' && get_option('robokassa_country_code') != 'KZ') ? $receipt : array();
     $recurring = false;
 
     if (class_exists('WC_Subscriptions_Order')) {
@@ -838,7 +836,7 @@ function robokassa_payment_createFormWC($order_id, $label, $commission = 0)
         $invDesc,
         get_option('robokassa_payment_test_onoff'),
         $label,
-        $receiptForForm,
+        $receipt,
         $order->get_billing_email(),
         $order->get_currency(),
         $recurring
@@ -1131,9 +1129,9 @@ function robokassa_2check_send($order_id, $old_status, $new_status)
     }
 
     /** @var string $startupHash */
-    $startupHash = formatSignFinish(
+    $startupHash = robokassa_format_sign_finish(
         \base64_encode(
-            formatSignReplace(
+            robokassa_format_sign_replace(
                 json_encode($fields)
             )
         )
@@ -1148,7 +1146,7 @@ function robokassa_2check_send($order_id, $old_status, $new_status)
     }
 
     /** @var string $sign */
-    $sign = formatSignFinish(
+    $sign = robokassa_format_sign_finish(
         \base64_encode(
             \md5(
                 $startupHash .
@@ -1157,14 +1155,11 @@ function robokassa_2check_send($order_id, $old_status, $new_status)
         )
     );
 
-    $curl = curl_init('https://ws.roboxchange.com/RoboFiscal/Receipt/Attach');
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $startupHash . '.' . $sign);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($startupHash . '.' . $sign))
-    );
-    $result = curl_exec($curl);
-    curl_close($curl);
+    $second_check = wp_remote_post( 'https://ws.roboxchange.com/RoboFiscal/Receipt/Attach', array(
+    'body'    => $startupHash . '.' . $sign,
+    'headers' => array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($startupHash . '.' . $sign),
+    ),
+) );
 }

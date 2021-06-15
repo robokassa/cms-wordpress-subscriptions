@@ -145,19 +145,19 @@
 
 		            <tr>
 			            <th colspan="2">
-				            <?=$method->title;?>
+				            <?php echo $method->title;?>
 			            </th>
 		            </tr>
 		            <tr valign="top">
 		                <td scope="row">Заголовок на странице оформления заказа</td>
 		                <td>
-			                <input type="text" name="RobokassaOrderPageTitle_<?=$method->id;?>" value="<?php echo get_option('RobokassaOrderPageTitle_'.$method->id); ?>"/>
+			                <input type="text" name="RobokassaOrderPageTitle_<?php echo $method->id;?>" value="<?php echo get_option('RobokassaOrderPageTitle_'.$method->id); ?>"/>
 		                </td>
 		            </tr>
 		            <tr valign="top">
 		                <td scope="row">Описание на странице оформления заказа</td>
 		                <td>
-			                <input type="text" name="RobokassaOrderPageDescription_<?=$method->id;?>" value="<?php echo get_option('RobokassaOrderPageDescription_'.$method->id); ?>"/>
+			                <input type="text" name="RobokassaOrderPageDescription_<?php echo $method->id;?>" value="<?php echo get_option('RobokassaOrderPageDescription_'.$method->id); ?>"/>
 		                </td>
 		            </tr>
 		        <?php endforeach;?>
@@ -204,7 +204,7 @@
                 <td>
                     <select name="robokassa_culture">
                         <?php foreach(\Robokassa\Payment\Helper::$culture as $culture):?>
-                            <option<?php if(get_option('robokassa_culture') == $culture['code']):?> selected="selected"<?php endif;?> value="<?=$culture['code'];?>"><?=$culture['title'];?></option>
+                            <option<?php if(get_option('robokassa_culture') == $culture['code']):?> selected="selected"<?php endif;?> value="<?php echo $culture['code'];?>"><?php echo $culture['title'];?></option>
                         <?php endforeach;?>
                     </select>
                 </td>
@@ -265,15 +265,6 @@
 
         <div class="spoiler_body">
             <table class="form-table">
-                <tr valign="top">
-                    <th scope="row">Статус продавца</th>
-                    <td>
-                        <input type="radio" id="type_ur" name="robokassa_payment_type_commission"
-                               value="false" <?php echo get_option('robokassa_payment_type_commission') == 'false' ? 'checked="checked"'
-                            : ''; ?> onchange="spoleer();"><label for="type_ur">Юридическое лицо</label>
-                    </td>
-                </tr>
-
                 <tr valign="top" id="sno">
                     <th scope="row">Система налогообложения</th>
                     <td>
@@ -309,7 +300,7 @@
                         <select id="payment_method_select" name="robokassa_payment_paymentMethod" onchange="spoleer();">
 	                        <option value="">Не выбрано</option>
 	                        <?php foreach(\Robokassa\Payment\Helper::$paymentMethods as $paymentMethod):?>
-		                        <option <?php if(\get_option('robokassa_payment_paymentMethod') === $paymentMethod['code']):?> selected="selected"<?php endif;?> value="<?=$paymentMethod['code'];?>"><?=$paymentMethod['title'];?></option>
+		                        <option <?php if(\get_option('robokassa_payment_paymentMethod') === $paymentMethod['code']):?> selected="selected"<?php endif;?> value="<?php echo $paymentMethod['code'];?>"><?php echo $paymentMethod['title'];?></option>
 	                        <?php endforeach;?>
                         </select>
                     </td>
@@ -320,7 +311,7 @@
                         <select id="payment_object_select" name="robokassa_payment_paymentObject" onchange="spoleer();">
 	                        <option value="">Не выбрано</option>
 	                        <?php foreach(\Robokassa\Payment\Helper::$paymentObjects as $paymentObject):?>
-		                        <option <?php if(\get_option('robokassa_payment_paymentObject') === $paymentObject['code']):?> selected="selected"<?php endif;?>value="<?=$paymentObject['code'];?>"><?=$paymentObject['title'];?></option>
+		                        <option <?php if(\get_option('robokassa_payment_paymentObject') === $paymentObject['code']):?> selected="selected"<?php endif;?>value="<?php echo $paymentObject['code'];?>"><?php echo $paymentObject['title'];?></option>
 	                        <?php endforeach;?>
                         </select>
                     </td>
@@ -426,7 +417,7 @@
         </div>
 
         <input type="hidden" name="action" value="update"/>
-        <input type="hidden" name="page_options" value="<?=\implode(',', $formProperties);?>"/>
+        <input type="hidden" name="page_options" value="<?php echo \implode(',', $formProperties);?>"/>
 
         <p class="submit">
             <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>"/>
@@ -434,28 +425,3 @@
 
     </form>
 </div>
-<script
-  src="https://code.jquery.com/jquery-3.5.0.min.js"
-  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
-  crossorigin="anonymous"></script>
-<script type="text/javascript">
-	<?php if(get_option('robokassa_country_code') == 'KZ'){ ?>
-		$('#robopaytype').trigger('click');
-		$('#shoppaytype').attr('disabled','true');
-	<?php } ?>
-	$('#robokassa_country_code').on(
-		'change',
-		function ()
-		{
-			if ($(this).val() == 'KZ')
-			{
-				$('#robopaytype').trigger('click');
-				$('#shoppaytype').attr('disabled','true');
-			}
-			else
-			{
-				$('#shoppaytype').removeAttr('disabled');
-			}
-		}
-	);
-</script>

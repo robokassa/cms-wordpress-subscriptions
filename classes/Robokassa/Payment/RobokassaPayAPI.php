@@ -252,8 +252,8 @@ class RobokassaPayAPI {
 					}
 				}
 			}
-			
-			$form = "<script type=\"text/javascript\" src=\"https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js\"></script>";
+
+			$form = wp_enqueue_script('robokassa_iframe', 'https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js');
 			$form .= "<input type=\"submit\" onclick=\"Robokassa.StartPayment({" . $params . "})\" value=\"Оплатить\">";
 		} else {
 			$form = '<div class="preloader">
@@ -346,7 +346,7 @@ class RobokassaPayAPI {
 
         $url = substr($_SERVER['SERVER_PROTOCOL'], 0, -4).'://services.robokassa.ru/SMS/?'.http_build_query($data);
 
-        $response = file_get_contents($url);
+        $response = wp_remote_get($url);
         $parsed = json_decode($response, true);
 
         $this->request = $url;
@@ -450,7 +450,7 @@ class RobokassaPayAPI {
             "\n",
             "\r",
             "\t",
-        ), '', file_get_contents($url))))));
+        ), '', wp_remote_retrieve_body(wp_remote_get($url)))))));
     }
 
     /**
