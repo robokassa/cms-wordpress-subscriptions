@@ -708,7 +708,6 @@ function robokassa_payment_createFormWC($order_id, $label, $commission = 0)
     $sno = get_option('robokassa_payment_sno');
     $tax = get_option('robokassa_payment_tax');
 
-    if ($tax == "vat18") $tax = "vat20";
     if ($tax == "vat118") $tax = "vat120";
 
     $receipt = array();
@@ -1079,8 +1078,6 @@ function robokassa_2check_send($order_id, $old_status, $new_status)
 
             case "vat10":
                 $fields['vats'][] = ['type' => $tax, 'sum' => ($shipping_total / 100) * 10];
-            case "vat18":
-                $fields['vats'][] = ['type' => $tax, 'sum' => ($shipping_total / 100) * 18];
             case "vat20":
                 $fields['vats'][] = ['type' => $tax, 'sum' => ($shipping_total / 100) * 20];
                 break;
@@ -1118,8 +1115,6 @@ function robokassa_2check_send($order_id, $old_status, $new_status)
                 break;
 
             case "vat10":
-                $fields['vats'][] = ['type' => $tax, 'sum' => ($item['line_total'] / 100) * 18];
-            case "vat18":
                 $fields['vats'][] = ['type' => $tax, 'sum' => ($item['line_total'] / 100) * 18];
             case "vat20":
                 $fields['vats'][] = ['type' => $tax, 'sum' => ($item['line_total'] / 100) * 20];
