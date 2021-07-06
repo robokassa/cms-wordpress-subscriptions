@@ -115,7 +115,7 @@ class RobokassaPayAPI {
 		            $outCurrency,
 	                $receiptJson,
 	                $this->mrh_pass1,
-	                'shp_label=official_wordpress'
+	                'shp_label=official_wordpress_subs'
 	            ),
 	            array(
 	            	false,
@@ -185,7 +185,7 @@ class RobokassaPayAPI {
             'OutSum'         => $sum,
             'InvId'          => $invId,
             'Desc'           => $invDesc,
-            'shp_label'      => 'official_wordpress',
+            'shp_label'      => 'official_wordpress_subs',
             'OutSumCurrency' => $currency,
             'recurring'      => $recurring ? 'true' : '',
             'SignatureValue' => $this->getSignature($this->getSignatureString($sum, $invId, $receiptJson, $currency)),
@@ -482,7 +482,7 @@ class RobokassaPayAPI {
             'Description'       => '',
             'SignatureValue'    => $this->getSignature($this->getSignatureString($amount, $invoiceId, $receiptJson, false)),
             'OutSum'            => $amount,
-            'shp_label'         => 'official_wordpress',
+            'shp_label'         => 'official_wordpress_subs',
             'Receipt'           => $receiptJson
         ], function($val) { return $val !== null; });
 
