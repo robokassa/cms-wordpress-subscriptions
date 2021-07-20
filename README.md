@@ -55,5 +55,8 @@
 
 ### Changelog
 
-= 1.0 =
+= 1.0.0 =
 * Добавлена поддержка плагина WooCommerce Subscriptions
+
+= 1.0.1 =
+* Добавлена поддержка WordPress 5.8
