@@ -6,7 +6,7 @@
   Description: Данный плагин добавляет на Ваш сайт метод оплаты Робокасса с поддержкой периодических платежей
   Plugin URI: /wp-admin/admin.php?page=main_settings_rb.php
   Author: Робокасса
-  Version: 1.0.0
+  Version: 1.0.1
 */
 
 use Robokassa\Payment\RoboDataBase;
