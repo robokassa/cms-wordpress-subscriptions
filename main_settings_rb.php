@@ -1,5 +1,8 @@
 <?php
 
+$json = file_get_contents($_SERVER['DOCUMENT_ROOT']."/wp-content/plugins/robokassa/data/registration_data.json");
+$data = json_decode($json, TRUE);
+
 	if(!\current_user_can('activate_plugins'))
 	{
 
@@ -15,6 +18,11 @@
 		'robokassa_payment_admin_main_payment',
 		\plugin_dir_url(__FILE__) . 'assets/js/admin-payment.js'
 	);
+
+\wp_enqueue_style(
+    'robokassa_payment_admin_style_main',
+    \plugin_dir_url(__FILE__) . 'assets/css/main.css'
+);
 ?>
 
 <div class="content_holder">
@@ -65,8 +73,8 @@
 
 <div class="main-settings">
     <div align="left"><p class="big_title_rb">Помощь и инструкция по установке</p></div>
-    <p>Введите данные API в разделе "Основные настройки".</p>
-    <p>В личном кабинете на сайте Робокассы введите следующие URL адреса:</p>
+    <p><b>1) Введите данные API в разделе "Основные настройки"</b></p>
+    <p><b>2) В личном кабинете на сайте Робокассы введите следующие URL адреса:</b></p>
     <table>
         <tr>
             <td>ResultURL:</td>
@@ -99,7 +107,7 @@
 
     <p>Метод отсылки данных <code>POST</code></p>
     <p>Алгоритм расчета хеша<code>MD5</code></p>
-    <p>После введите логин и пароли магазина в соответсвующие поля ниже</p>
+    <p><b>3) После введите логин и пароли магазина в соответсвующие поля ниже</b></p>
     <p class="big_title_rb">Основные настройки</p>
 
     <form action="options.php" method="POST">
@@ -186,17 +194,35 @@
 
             <tr valign="top">
                 <th scope="row">Идентификатор магазина</th>
-                <td><input type="text" name="robokassa_payment_MerchantLogin" value="<?php echo get_option('robokassa_payment_MerchantLogin'); ?>"/></td>
+                <td><input type="text" name="robokassa_payment_MerchantLogin" value="<?php
+                    if (empty($data['shopId'])){
+                        echo get_option('robokassa_payment_MerchantLogin');
+                    } else {
+                        echo $data['shopId'];
+                    }
+                    ?>"/></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row">Пароль магазина #1</th>
-                <td><input type="password" name="robokassa_payment_shoppass1" value="<?php echo get_option('robokassa_payment_shoppass1'); ?>"/></td>
+                <td><input type="password" name="robokassa_payment_shoppass1" value="<?php
+                    if (empty($data['key_1'])){
+                        echo get_option('robokassa_payment_shoppass1');
+                    } else {
+                        echo $data['key_1'];
+                    }
+                    ?>"/></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row">Пароль магазина #2</th>
-                <td><input type="password" name="robokassa_payment_shoppass2" value="<?php echo get_option('robokassa_payment_shoppass2'); ?>"/></td>
+                <td><input type="password" name="robokassa_payment_shoppass2" value="<?php
+                    if (empty($data['key_2'])){
+                        echo get_option('robokassa_payment_shoppass2');
+                    } else {
+                        echo $data['key_2'];
+                    }
+                    ?>"/></td>
             </tr>
 
             <tr valign="top">

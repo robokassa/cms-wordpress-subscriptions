@@ -27,7 +27,7 @@
 
 ### Установка
 
-1. Скачайте репозиторий в папку /wp-content/plugins/woocommerce_robokassa
+1. Скачайте репозиторий в папку /wp-content/plugins/
 2. Активируйте плагин в настройках WordPress /wp-admin/plugins.php
 3. Настройте параметры подключения /wp-admin/admin.php?page=robokassa_payment_main_rb
 
@@ -63,3 +63,7 @@
 
 = 1.0.2 =
 * Добавлена проверка факта установки плагина WooCommerce
+
+= 1.1.0 =
+* Добавлен функционал регистрации
+* Изменен дизайн страницы настроек
