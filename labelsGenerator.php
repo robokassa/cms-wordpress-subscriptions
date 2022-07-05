@@ -7,13 +7,6 @@ $robokassa = new \Robokassa\Payment\RobokassaPayAPI(
 );
 
 $currLabels = $robokassa->getCurrLabels();
-
-if (empty($currLabels) && \get_option('robokassa_country_code') != 'KZ')
-{
-	echo 'Не удалось загрузить методы оплаты. Убедитесь, что вы указали корректный идентификатор магазина и ваш магазин активирован';
-    die();
-}
-
 $labels = __DIR__ . '/labelsClasses.php';
 
 $labelsFile = fopen($labels, 'w');

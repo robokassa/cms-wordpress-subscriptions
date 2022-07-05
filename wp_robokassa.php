@@ -1,13 +1,13 @@
 <?php
 
-/*
-  Plugin Name: Robokassa Subscriptions
-
-  Description: Данный плагин добавляет на Ваш сайт метод оплаты Робокасса с поддержкой периодических платежей
-  Plugin URI: /wp-admin/admin.php?page=main_settings_rb.php
-  Author: Робокасса
-  Version: 1.0.2
-*/
+/**
+ * Plugin Name: Robokassa Subscriptions
+ * Description: Данный плагин добавляет на Ваш сайт метод оплаты Робокасса для WooCommerce Subscriptions
+ * Plugin URI: /wp-admin/admin.php?page=main_settings_rb.php
+ * Author: Robokassa
+ * Author URI: https://robokassa.com
+ * Version: 1.1.0
+ */
 
 use Robokassa\Payment\RoboDataBase;
 use Robokassa\Payment\RobokassaPayAPI;
@@ -252,6 +252,7 @@ function robokassa_payment_initMenu()
     add_submenu_page('main_settings_rb.php', 'Настройки СМС', 'Настройки СМС', 'edit_pages', 'robokassa_payment_sms_rb', 'robokassa_payment_sms_settings');
     add_submenu_page('main_settings_rb.php', 'РобоМаркет', 'РобоМаркет', 'edit_pages', 'robokassa_payment_robomarket_rb', 'robokassa_payment_robomarket_settings');
     add_submenu_page('main_settings_rb.php', 'Генерировать YML', 'Генерировать YML', 'edit_pages', 'robokassa_payment_YMLGenerator', 'robokassa_payment_yml_generator');
+    add_submenu_page('main_settings_rb.php', 'Регистрация', 'Регистрация', 'edit_pages', 'robokassa_payment_registration', 'robokassa_payment_reg');
 }
 
 /**
@@ -368,6 +369,18 @@ function robokassa_payment_wp_robokassa_checkPayment()
         if ($_REQUEST['robokassa'] == 'fail') {
             header('Location:' . robokassa_payment_get_success_fail_url(get_option('robokassa_payment_FailURL'), sanitize_file_name($_REQUEST['InvId'])));
             die;
+        }
+
+        if ($_REQUEST['robokassa'] == 'registration') {
+
+            $postData = file_get_contents('php://input');
+            $data = json_decode($postData, true);
+
+            $filename = 'registration_data.json';
+            $save = json_encode($data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT']."/wp-content/plugins/robokassa/data/{$filename}", $save);
+
+            echo json_encode($data);
         }
 
         echo sanitize_file_name($returner);
@@ -680,7 +693,7 @@ function robokassa_payment_robomarketRequest()
  *
  * Включает в себя подготовку данных и рендеринг самой формы
  *
- * @param mixed $order_id - вукомерс настолько гейский, что любое значение валидным считает
+ * @param mixed $order_id
  * @param       $label
  * @param int $commission
  *
@@ -952,6 +965,16 @@ function robokassa_payment_yml_generator()
     include 'menu_rb.php';
     include 'YMLGenerator.php';
     robokassa_payment_generateYML();
+}
+
+/**
+ * @return void
+ */
+function robokassa_payment_reg()
+{
+    $_GET['li'] = 'registration';
+    include 'menu_rb.php';
+    include 'registration.php';
 }
 
 /**
