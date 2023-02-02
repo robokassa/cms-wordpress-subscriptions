@@ -6,7 +6,7 @@
  * Plugin URI: /wp-admin/admin.php?page=main_settings_rb.php
  * Author: Robokassa
  * Author URI: https://robokassa.com
- * Version: 1.1.0
+ * Version: 1.1.5
  */
 
 use Robokassa\Payment\RoboDataBase;
@@ -739,7 +739,9 @@ function robokassa_payment_createFormWC($order_id, $label, $commission = 0)
         $current['name'] = $product->get_title();
         $current['quantity'] = (float)$item['quantity'];
 
-        $current['sum'] = $useMarkup ? ($item['line_total'] + ($item['line_total'] / 100 * $markup)) : $item['line_total'];
+        $discount_total = WC()->cart->get_cart_discount_total() / $current['quantity'];
+
+        $current['cost'] = number_format( $product->get_price(), 2, '.', '' ) - $discount_total;
 
         $current['payment_object'] = \get_option('robokassa_payment_paymentObject');
         $current['payment_method'] = \get_option('robokassa_payment_paymentMethod');
